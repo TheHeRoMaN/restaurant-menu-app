@@ -1,10 +1,11 @@
-
 import React from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
+
 const Header = () => {
-  const { isAuthenticated, logout, user } = useAuth();
+  const { isAuthenticated, logout } = useAuth(); // Remove 'user' since it's not used
   const { pathname } = useLocation();
+  
   return (
     <header className="header">
       <h1>🍽️ Bella Vista Restaurant</h1>
@@ -22,4 +23,5 @@ const Header = () => {
     </header>
   );
 };
+
 export default Header;

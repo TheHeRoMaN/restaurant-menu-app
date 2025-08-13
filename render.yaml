@@ -1,0 +1,18 @@
+services:
+  - type: web
+    name: restaurant-menu-backend
+    env: node
+    plan: free
+    buildCommand: npm install
+    startCommand: npm start
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: JWT_SECRET
+        generateValue: true
+      - key: MONGO_URI
+        sync: false  # You'll set this manually from MongoDB Atlas
+      - key: PORT
+        value: 10000
+    healthCheckPath: /api/menu
+    autoDeploy: false

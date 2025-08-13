@@ -1,127 +1,29 @@
+
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
-import { toast } from 'react-toastify';
-
-function Login() {
-  const [formData, setFormData] = useState({
-    username: '',
-    password: ''
-  });
-  const [loading, setLoading] = useState(false);
+const Login = () => {
+  const [username, setUsername] = useState('');
+  const [password, setPassword] = useState('');
   const [error, setError] = useState('');
-
   const { login } = useAuth();
   const navigate = useNavigate();
-
-  const handleChange = (e) => {
-    setFormData({
-      ...formData,
-      [e.target.name]: e.target.value
-    });
-    // Clear error when user starts typing
-    if (error) setError('');
-  };
-
-  const handleSubmit = async (e) => {
+  const handleSubmit = async e => {
     e.preventDefault();
-
-    if (!formData.username.trim() || !formData.password) {
-      setError('Please enter both username and password');
-      return;
-    }
-
-    setLoading(true);
-    setError('');
-
-    try {
-      const result = await login(formData.username.trim(), formData.password);
-
-      if (result.success) {
-        toast.success('Login successful!');
-        navigate('/admin');
-      } else {
-        setError(result.message || 'Login failed');
-        toast.error(result.message || 'Login failed');
-      }
-    } catch (error) {
-      const errorMessage = error.response?.data?.message || 'An error occurred during login';
-      setError(errorMessage);
-      toast.error(errorMessage);
-    } finally {
-      setLoading(false);
-    }
+    const result = await login(username, password);
+    if (result.success) navigate('/admin');
+    else setError(result.message);
   };
-
   return (
     <div className="login-container">
-      <div className="login-card fade-in">
+      <form className="login-card" onSubmit={handleSubmit}>
         <h2>Admin Login</h2>
-
-        {error && (
-          <div className="error-message">
-            {error}
-          </div>
-        )}
-
-        <form onSubmit={handleSubmit} className="form-grid">
-          <div className="form-group">
-            <label htmlFor="username">Username</label>
-            <input
-              type="text"
-              id="username"
-              name="username"
-              value={formData.username}
-              onChange={handleChange}
-              required
-              autoComplete="username"
-              disabled={loading}
-              placeholder="Enter admin username"
-            />
-          </div>
-
-          <div className="form-group">
-            <label htmlFor="password">Password</label>
-            <input
-              type="password"
-              id="password"
-              name="password"
-              value={formData.password}
-              onChange={handleChange}
-              required
-              autoComplete="current-password"
-              disabled={loading}
-              placeholder="Enter admin password"
-            />
-          </div>
-
-          <div className="form-actions">
-            <button 
-              type="submit" 
-              className="btn btn-primary" 
-              disabled={loading}
-              style={{ width: '100%' }}
-            >
-              {loading ? 'Logging in...' : 'Login'}
-            </button>
-          </div>
-        </form>
-
-        <div style={{ 
-          marginTop: '2rem', 
-          padding: '1rem', 
-          backgroundColor: '#f9fafb', 
-          borderRadius: '8px',
-          fontSize: '0.9rem',
-          color: '#6b7280'
-        }}>
-          <strong>Demo Credentials:</strong><br />
-          Username: admin<br />
-          Password: restaurant123
-        </div>
-      </div>
+        {error && <div className="error-message">{error}</div>}
+        <div className="form-group"><label>Username</label><input value={username} onChange={e=>setUsername(e.target.value)} required /></div>
+        <div className="form-group"><label>Password</label><input type="password" value={password} onChange={e=>setPassword(e.target.value)} required /></div>
+        <button className="btn btn-primary" type="submit">Login</button>
+      </form>
     </div>
   );
-}
-
+};
 export default Login;

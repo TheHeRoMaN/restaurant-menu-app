@@ -8,7 +8,7 @@ const MenuItem = require('./models/MenuItem');
 
 const connectDB = async () => {
   try {
-    await mongoose.connect(process.env.MONGO_URI || 'mongodb://localhost:27017/restaurant-menu', {
+    await mongoose.connect(process.env.MONGO_URI || 'mongodb+srv://Admin:restaurant123@cluster0.ak5weiy.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0', {
       useNewUrlParser: true,
       useUnifiedTopology: true,
     });
